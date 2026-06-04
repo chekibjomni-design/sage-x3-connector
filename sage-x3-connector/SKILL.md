@@ -15,7 +15,7 @@ from sage_x3_connector import get_sage_connection, get_connection_string
 # Get an ODBC connection
 conn = get_sage_connection()
 cursor = conn.cursor()
-cursor.execute("SELECT COUNT(*) FROM PROD.SINVOICE")
+cursor.execute("SELECT COUNT(*) FROM YOUR_SCHEMA.SINVOICE")
 print(cursor.fetchone())
 conn.close()
 
@@ -45,9 +45,9 @@ SAGE_GATEWAY=<windows_gateway_ip>
 
 | Scenario | Example |
 |----------|---------|
-| Named instance (default) | `SAGE_SERVER=192.168.x.x\SAGEX3` |
-| With explicit port | `SAGE_SERVER=192.168.x.x + SAGE_PORT=50321` |
-| WSL gateway | `SAGE_GATEWAY=172.25.x.x + SAGE_PORT=50321` |
+| Named instance (default) | `SAGE_SERVER=<host>\<instance>` |
+| With explicit port | `SAGE_SERVER=<host> + SAGE_PORT=<port>` |
+| WSL gateway | `SAGE_GATEWAY=<gateway_ip> + SAGE_PORT=<port>` |
 
 ### WSL2 Gateway
 
@@ -64,7 +64,7 @@ Then set `SAGE_GATEWAY=<windows_gateway_ip>` in `.env`.
 
 | Table | Content | Key Columns |
 |-------|---------|-------------|
-| `SINVOICE` | Invoice headers | `NUM_0`, `SIVTYP_0` (FVL/AVL/FBL/ABL), `STA_0` (1=NV, 2=V), `AMTNOT_0` (HT), `AMTATI_0` (TTC), `BPR_0`, `BPRNAM_0`, `ACCDAT_0` |
+| `SINVOICE` | Invoice headers | `NUM_0`, `SIVTYP_0` (FVL/AVL/FBL/ABL), `STA_0` (1=NV, 2=V), `AMTNOT_0`, `AMTATI_0`, `BPR_0`, `BPRNAM_0`, `ACCDAT_0` |
 | `SINVOICED` | Invoice lines | `NUM_0`, `ITMREF_0`, `QTYSTU_0`, `BASTAXLIN_0`, `AMTNOTLIN_0`, `AMTTAXLIN_0`, `DISCRGVAL4_0`, `SAUSTUCOE_0` |
 | `GACCENTRYD` | Journal entries | `TYP_0`, `NUM_0`, `ACC_0`, `SNS_0`, `AMTLED_0`, `MTC_0`, `LED_0` |
 | `GACCOUNT` | Account labels | `ACC_0`, `DES_0` |

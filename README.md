@@ -11,7 +11,7 @@ from sage_x3_connector import get_sage_connection
 
 conn = get_sage_connection()
 cursor = conn.cursor()
-cursor.execute("SELECT COUNT(*) FROM PROD.SINVOICE")
+cursor.execute("SELECT COUNT(*) FROM YOUR_SCHEMA.SINVOICE")
 print(cursor.fetchone())
 conn.close()
 ```
@@ -74,10 +74,10 @@ SAGE_GATEWAY=<windows_gateway_ip>
 Or set environment variables directly:
 
 ```bash
-export SAGE_SERVER="192.168.x.x\SAGEX3"
-export SAGE_DATABASE="uccv"
-export SAGE_USER="PROD"
-export SAGE_PASSWORD="your_password"
+export SAGE_SERVER="<your_host>\<your_instance>"
+export SAGE_DATABASE="<your_database>"
+export SAGE_USER="<your_user>"
+export SAGE_PASSWORD="<your_password>"
 ```
 
 ## Connection Modes
@@ -85,15 +85,15 @@ export SAGE_PASSWORD="your_password"
 ### 1. Named Instance (default)
 
 ```env
-SAGE_SERVER=192.168.x.x\SAGEX3
+SAGE_SERVER=<your_host>\<your_instance>
 # SAGE_PORT not set → uses SQL Browser (UDP 1434)
 ```
 
 ### 2. Host + Port (recommended)
 
 ```env
-SAGE_SERVER=192.168.x.x
-SAGE_PORT=50321
+SAGE_SERVER=<your_host>
+SAGE_PORT=<your_port>
 # Uses explicit TCP port — faster, no SQL Browser needed
 ```
 
@@ -122,7 +122,7 @@ Returns the ODBC connection string. Useful for pandas, ETL tools, etc.
 
 ```python
 cs = get_connection_string(readonly=True)
-df = pd.read_sql("SELECT * FROM PROD.SINVOICE", pyodbc.connect(cs))
+df = pd.read_sql("SELECT * FROM YOUR_SCHEMA.SINVOICE", pyodbc.connect(cs))
 ```
 
 ### `get_sage_connection(readonly=False, timeout=30)`
@@ -149,10 +149,10 @@ conn = get_sage_connection(timeout=10)
 
 | Table | Content |
 |-------|---------|
-| `PROD.SINVOICE` | Invoice headers (NUM_0, SIVTYP_0, STA_0, AMTNOT_0, AMTATI_0, BPR_0, ACCDAT_0) |
-| `PROD.SINVOICED` | Invoice lines (NUM_0, ITMREF_0, QTYSTU_0, BASTAXLIN_0, AMTNOTLIN_0, AMTTAXLIN_0) |
-| `PROD.GACCENTRYD` | Journal entries (TYP_0, NUM_0, ACC_0, SNS_0, AMTLED_0, MTC_0, LED_0) |
-| `PROD.GACCOUNT` | Account labels (ACC_0, DES_0) |
+| `SINVOICE` | Invoice headers (NUM_0, SIVTYP_0, STA_0, AMTNOT_0, AMTATI_0, BPR_0, ACCDAT_0) |
+| `SINVOICED` | Invoice lines (NUM_0, ITMREF_0, QTYSTU_0, BASTAXLIN_0, AMTNOTLIN_0, AMTTAXLIN_0) |
+| `GACCENTRYD` | Journal entries (TYP_0, NUM_0, ACC_0, SNS_0, AMTLED_0, MTC_0, LED_0) |
+| `GACCOUNT` | Account labels (ACC_0, DES_0) |
 
 ## Related
 
