@@ -1,0 +1,54 @@
+name: Python Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyodbc python-dotenv
+          # Install ODBC driver for linting (not needed for syntax check)
+          # curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - 2>/dev/null || true
+
+      - name: Check syntax (py_compile)
+        run: |
+          python -m py_compile sage_x3_connector.py
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 sage_x3_connector.py --max-line-length=100 --extend-ignore=E402,W503
+        continue-on-error: true
+
+      - name: Check import structure
+        run: |
+          python -c "
+import ast, sys
+with open('sage_x3_connector.py') as f:
+    tree = ast.parse(f.read())
+classes = [n.name for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]
+functions = [n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]
+exports = [n.id for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id.startswith('SAGE_')]
+print(f'Classes: {classes}')
+print(f'Functions: {functions}')
+print(f'Exports: {exports}')
+print('AST parse OK')
+"
