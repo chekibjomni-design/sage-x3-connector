@@ -23,7 +23,7 @@ Configuration (in order of priority)
 3. Hardcoded defaults (see DEFAULTS below)
 
 Required .env variables:
-    SAGE_SERVER=<your_server>\<instance>
+    SAGE_SERVER=<your_server>\\<instance>
     SAGE_DATABASE=<your_database>
     SAGE_USER=<your_user>
     SAGE_PASSWORD=<your_password>
